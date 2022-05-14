@@ -2,6 +2,9 @@ package string_sum
 
 import (
 	"errors"
+	"fmt"
+	"strconv"
+	"strings"
 )
 
 //use these errors as appropriate, wrapping them with fmt.Errorf function
@@ -23,5 +26,47 @@ var (
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
 func StringSum(input string) (output string, err error) {
-	return "", nil
+	arr := make([]rune, 0)
+	operands := 0
+	for _, v := range input {
+		if !strings.Contains("0123456789+-", string(v)) {
+			return "", fmt.Errorf("use of unsupported character")
+		}
+		if v != ' ' {
+			arr = append(arr, v)
+		}
+		if v == '+' || v == '-' {
+			operands++
+		}
+	}
+
+	if arr == nil || len(arr) == 0 {
+		return "", fmt.Errorf("something went wrong: %w", errorEmptyInput)
+	}
+
+	if !(len(arr) == 4 && operands == 2 || len(arr) == 3 && operands == 1) {
+		return "", fmt.Errorf("something went wrong: %w", errorNotTwoOperands)
+	}
+
+	second, ok := strconv.ParseInt(string(arr[len(arr)-1]), 10, 0)
+
+	if ok != nil {
+		return "", fmt.Errorf("invalid input")
+	}
+
+	if arr[len(arr)-2] == '-' {
+		second *= -1
+	}
+
+	first, ok := strconv.ParseInt(string(arr[len(arr)-3]), 10, 0)
+
+	if ok != nil {
+		return "", fmt.Errorf("invalid input")
+	}
+
+	if len(arr) == 4 && arr[0] == '-' {
+		first *= -1
+	}
+
+	return strconv.FormatInt(first+second, 10), nil
 }
