@@ -18,7 +18,7 @@ func StringSum(input string) (output string, err error) {
 	arr := make([]rune, 0)
 	operands := 0
 	for _, v := range input {
-		if !strings.Contains("0123456789+-", string(v)) {
+		if !strings.Contains("0123456789+- ", string(v)) {
 			return "", fmt.Errorf("something went wrong: %w", errorUnsupportedCharacters)
 		}
 		if v != ' ' {
