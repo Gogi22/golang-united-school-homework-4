@@ -12,6 +12,7 @@ var (
 	errorNotTwoOperands        = errors.New("expecting two operands, but received more or less")
 	errorUnsupportedCharacters = errors.New("some characters are not supported")
 	errorInvalidInput          = errors.New("input is not valid")
+	generalErrorText           = "something went wrong"
 )
 
 func StringSum(input string) (output string, err error) {
@@ -19,7 +20,7 @@ func StringSum(input string) (output string, err error) {
 	operands := 0
 	for _, v := range input {
 		if !strings.Contains("0123456789+- ", string(v)) {
-			return "", fmt.Errorf("something went wrong: %w", errorUnsupportedCharacters)
+			return "", fmt.Errorf("%s: %w", generalErrorText, errorUnsupportedCharacters)
 		}
 		if v != ' ' {
 			arr = append(arr, v)
@@ -30,31 +31,28 @@ func StringSum(input string) (output string, err error) {
 	}
 
 	if arr == nil || len(arr) == 0 {
-		return "", fmt.Errorf("something went wrong: %w", errorEmptyInput)
+		return "", fmt.Errorf("%s: %w", generalErrorText, errorEmptyInput)
 	}
 
-	if !(len(arr) == 4 && operands == 2 || len(arr) == 3 && operands == 1) {
-		return "", fmt.Errorf("something went wrong: %w", errorInvalidInput)
+	i := 0
+	if arr[0] == '+' || arr[0] == '-' {
+		i = 1
 	}
 
-	second, ok := strconv.ParseInt(string(arr[len(arr)-1]), 10, 0)
+	for i < len(arr) && !(arr[i] == '+' || arr[i] == '-') {
+		i++
+	}
+
+	first, ok := strconv.ParseInt(string(arr[:i]), 10, 0)
 
 	if ok != nil {
-		return "", fmt.Errorf("something went wrong: %w", errorInvalidInput)
+		return "", fmt.Errorf("%s: %w", generalErrorText, errorInvalidInput)
 	}
 
-	if arr[len(arr)-2] == '-' {
-		second *= -1
-	}
-
-	first, ok := strconv.ParseInt(string(arr[len(arr)-3]), 10, 0)
+	second, ok := strconv.ParseInt(string(arr[i:]), 10, 0)
 
 	if ok != nil {
-		return "", fmt.Errorf("something went wrong: %w", errorInvalidInput)
-	}
-
-	if len(arr) == 4 && arr[0] == '-' {
-		first *= -1
+		return "", fmt.Errorf("%s: %w", generalErrorText, errorInvalidInput)
 	}
 
 	return strconv.FormatInt(first+second, 10), nil
