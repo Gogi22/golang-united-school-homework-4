@@ -33,10 +33,6 @@ func StringSum(input string) (output string, err error) {
 		return "", fmt.Errorf("something went wrong: %w", errorEmptyInput)
 	}
 
-	if operands != 2 {
-		return "", fmt.Errorf("something went wrong: %w", errorNotTwoOperands)
-	}
-
 	if !(len(arr) == 4 && operands == 2 || len(arr) == 3 && operands == 1) {
 		return "", fmt.Errorf("something went wrong: %w", errorInvalidInput)
 	}
