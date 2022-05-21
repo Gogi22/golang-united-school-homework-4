@@ -12,7 +12,6 @@ var (
 	errorNotTwoOperands        = errors.New("expecting two operands, but received more or less")
 	errorUnsupportedCharacters = errors.New("some characters are not supported")
 	errorInvalidInput          = errors.New("input is not valid")
-	generalErrorText           = "something went wrong"
 )
 
 func StringSum(input string) (output string, err error) {
@@ -20,7 +19,7 @@ func StringSum(input string) (output string, err error) {
 	operands := 0
 	for _, v := range input {
 		if !strings.Contains("0123456789+- ", string(v)) {
-			return "", fmt.Errorf("%s: %w", generalErrorText, errorUnsupportedCharacters)
+			return "", fmt.Errorf("%w", errorUnsupportedCharacters)
 		}
 		if v != ' ' {
 			arr = append(arr, v)
@@ -31,7 +30,7 @@ func StringSum(input string) (output string, err error) {
 	}
 
 	if arr == nil || len(arr) == 0 {
-		return "", fmt.Errorf("%s: %w", generalErrorText, errorEmptyInput)
+		return "", fmt.Errorf("%w", errorEmptyInput)
 	}
 
 	i := 0
@@ -46,13 +45,13 @@ func StringSum(input string) (output string, err error) {
 	first, ok := strconv.ParseInt(string(arr[:i]), 10, 0)
 
 	if ok != nil {
-		return "", fmt.Errorf("%s: %w", generalErrorText, errorInvalidInput)
+		return "", fmt.Errorf("%w", errorInvalidInput)
 	}
 
 	second, ok := strconv.ParseInt(string(arr[i:]), 10, 0)
 
 	if ok != nil {
-		return "", fmt.Errorf("%s: %w", generalErrorText, errorInvalidInput)
+		return "", fmt.Errorf("%w", errorInvalidInput)
 	}
 
 	return strconv.FormatInt(first+second, 10), nil
